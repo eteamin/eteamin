@@ -104,3 +104,5 @@ development.ini
 production.ini
 test.ini
 data/
+eteamin/public/storage
+eteamin/public/.DS_Store

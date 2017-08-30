@@ -18,8 +18,8 @@ class ArticleController(RestController):
 
     @expose('json')
     @flush()
-    def post(self):
-        return dict(article=Article.from_request())
+    def post(self, **kwargs):
+        return dict(article=Article.from_request(**kwargs))
 
     def put(self):
         raise NotImplementedError

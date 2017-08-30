@@ -5,6 +5,7 @@ from eteamin.tests import TestController
 class TestPost(TestController):
 
     def test_tag(self):
+        """Testing Posing Tag"""
         payload = {
             'title': 'this is a title',
         }

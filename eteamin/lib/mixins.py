@@ -18,11 +18,11 @@ class ConstructorMixin:
     @classmethod
     def from_request(cls):
         data = request.json
-        parent = cls()
+        instance = cls()
         for k, v in cls.as_json().items():
-            parent.__setattr__(k, data.get(k))
-        DBSession.add(parent)
-        return parent
+            instance.__setattr__(k, data.get(k))
+        DBSession.add(instance)
+        return instance
 
     @classmethod
     def as_json(cls):

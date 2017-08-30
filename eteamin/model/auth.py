@@ -109,16 +109,6 @@ class User(DeclarativeBase):
         return perms
 
     @classmethod
-    def by_email_address(cls, email):
-        """Return the user object whose email address is ``email``."""
-        return DBSession.query(cls).filter_by(email_address=email).first()
-
-    @classmethod
-    def by_user_name(cls, username):
-        """Return the user object whose user name is ``username``."""
-        return DBSession.query(cls).filter_by(user_name=username).first()
-
-    @classmethod
     def _hash_password(cls, password):
         salt = sha256()
         salt.update(os.urandom(60))
@@ -130,7 +120,6 @@ class User(DeclarativeBase):
         hash = hash.hexdigest()
 
         password = salt + hash
-
 
         return password
 
@@ -146,29 +135,12 @@ class User(DeclarativeBase):
                                                         _set_password))
 
     def validate_password(self, password):
-        """
-        Check the password against existing credentials.
-
-        :param password: the password that was provided by the user to
-            try and authenticate. This is the clear text version that we will
-            need to match against the hashed one in the database.
-        :type password: unicode object.
-        :return: Whether the password is valid.
-        :rtype: bool
-
-        """
         hash = sha256()
         hash.update((password + self.password[:64]).encode('utf-8'))
         return self.password[64:] == hash.hexdigest()
 
 
 class Permission(DeclarativeBase):
-    """
-    Permission definition.
-
-    Only the ``permission_name`` column is required.
-
-    """
 
     __tablename__ = 'tg_permission'
 

@@ -8,6 +8,7 @@ from sqlalchemy.orm import relation
 from tg import abort
 
 from eteamin.lib.mixins import ConstructorMixin
+from eteamin.lib.storage import store
 from eteamin.model import DeclarativeBase, metadata, DBSession
 
 
@@ -32,7 +33,7 @@ class Article(DeclarativeBase, ConstructorMixin):
     uid = Column(Integer, autoincrement=True, primary_key=True)
     title = Column(Unicode(255), unique=True, nullable=False)
     text = Column(Unicode, unique=True, nullable=False)
-    image = Column(Unicode(25), unique=True, nullable=False)
+    image = Column(Unicode, unique=True, nullable=False)
 
     created = Column(DateTime, default=datetime.now)
     views = Column(Integer, default=0)
@@ -45,14 +46,24 @@ class Article(DeclarativeBase, ConstructorMixin):
 
     @classmethod
     def as_json(cls):
-        return dict(uid=cls.uid, title=cls.title, text=cls.text, image=cls.image)
+        return dict(uid=cls.uid, title=cls.title, text=cls.text)
 
     @classmethod
     def one_or_none(cls, uid):
         instance = DBSession.query(cls).filter(cls.uid == uid).one_or_none()
         if not instance:
             abort(404, passthrough='json')
-        instance.views = cls.views + 1
+        instance.views = instance.views + 1
+        return instance
+
+    @classmethod
+    def from_request(cls, **kwargs):
+        instance = cls()
+        instance.image = store(kwargs.get('image'))
+        del kwargs['image']
+        for k, v in cls.as_json().items():
+            instance.__setattr__(k, kwargs.get(k))
+        DBSession.add(instance)
         return instance
 
 
