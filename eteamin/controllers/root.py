@@ -9,6 +9,7 @@ from tgext.admin.controller import AdminController
 
 from eteamin.lib.base import BaseController
 from eteamin.controllers.error import ErrorController
+from eteamin.controllers.tag import TagController
 from eteamin import model
 from eteamin.model import DBSession
 
@@ -17,7 +18,7 @@ __all__ = ['RootController', 'APIController']
 
 
 class APIController(BaseController):
-    pass
+    tags = TagController()
 
 
 class RootController(BaseController):

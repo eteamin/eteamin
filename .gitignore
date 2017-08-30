@@ -103,3 +103,4 @@ ENV/
 development.ini
 production.ini
 test.ini
+data/

@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 # Global session manager: DBSession() returns the Thread-local
 # session object appropriate for the current web request.
-maker = sessionmaker(autoflush=True, autocommit=False,
+maker = sessionmaker(autoflush=False, autocommit=False,
                      extension=ZopeTransactionExtension())
 DBSession = scoped_session(maker)
 
