@@ -59,5 +59,7 @@ def init_model(engine):
 
 # Import your model modules here.
 from eteamin.model.auth import User, Group, Permission
+from eteamin.model.blog import Tag, Article
 
-__all__ = ('User', 'Group', 'Permission')
+
+__all__ = ('User', 'Group', 'Permission', 'Tag', 'Article')
