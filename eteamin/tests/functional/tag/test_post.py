@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from nose.tools import ok_
-
 from eteamin.tests import TestController
 
 
@@ -15,3 +13,11 @@ class TestPost(TestController):
         get_resp = self.app.get('/api/tags/{}'.format(post_resp['tag'].get('uid'))).json
 
         assert payload.get('title') == get_resp['tag'].get('title')
+
+        payload = {
+            'title': None
+        }
+        self.app.post_json('/api/tags/', payload, status=400)
+
+        payload = {}
+        self.app.post_json('/api/tags', payload, status=400)

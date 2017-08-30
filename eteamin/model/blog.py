@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
+
 from sqlalchemy import Table, ForeignKey, Column
 from sqlalchemy.types import Unicode, Integer, DateTime
 from sqlalchemy.orm import relation
+from tg import abort
 
 from eteamin.lib.mixins import ConstructorMixin
 from eteamin.model import DeclarativeBase, metadata, DBSession
@@ -44,6 +46,14 @@ class Article(DeclarativeBase, ConstructorMixin):
     @classmethod
     def as_json(cls):
         return dict(uid=cls.uid, title=cls.title, text=cls.text, image=cls.image)
+
+    @classmethod
+    def one_or_none(cls, uid):
+        instance = DBSession.query(cls).filter(cls.uid == uid).one_or_none()
+        if not instance:
+            abort(404, passthrough='json')
+        instance.views = cls.views + 1
+        return instance
 
 
 class Tag(DeclarativeBase, ConstructorMixin):

@@ -2,6 +2,7 @@ from tg import expose
 from tg.controllers.restcontroller import RestController
 
 from eteamin.model import Tag
+from eteamin.lib.decorators import flush
 
 
 class TagController(RestController):
@@ -10,10 +11,12 @@ class TagController(RestController):
     def get_one(self, uid):
         return dict(tag=Tag.one_or_none(uid))
 
+    @expose('json')
     def get_all(self):
-        raise NotImplementedError
+        return dict(tags=Tag.all())
 
     @expose('json')
+    @flush()
     def post(self):
         return dict(tag=Tag.from_request())
 

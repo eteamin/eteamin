@@ -1,4 +1,4 @@
-from tg import request
+from tg import request, abort
 
 from eteamin.model import DBSession
 
@@ -6,7 +6,14 @@ from eteamin.model import DBSession
 class ConstructorMixin:
     @classmethod
     def one_or_none(cls, uid):
-        return DBSession.query(cls).filter(cls.uid == uid).one_or_none()
+        instance = DBSession.query(cls).filter(cls.uid == uid).one_or_none()
+        if not instance:
+            abort(404, passthrough='json')
+        return instance
+
+    @classmethod
+    def all(cls):
+        return DBSession.query(cls).all()
 
     @classmethod
     def from_request(cls):
@@ -15,7 +22,6 @@ class ConstructorMixin:
         for k, v in cls.as_json().items():
             parent.__setattr__(k, data.get(k))
         DBSession.add(parent)
-        DBSession.flush()
         return parent
 
     @classmethod
